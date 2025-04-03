@@ -1,0 +1,40 @@
+name: Build and Push to Release Branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the project
+        run: yarn build
+
+      - name: Prepare clean release
+        run: |
+          mkdir release
+          cp -r dist release/
+          cp package.json README.md LICENSE release/ || true
+
+      - name: Push to release branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: release
+          folder: release
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
