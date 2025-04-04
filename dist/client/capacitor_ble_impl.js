@@ -27,7 +27,10 @@ class NiimbotCapacitorBleClient extends _1.NiimbotAbstractClient {
             };
         }
         else {
-            device = await bluetooth_le_1.BleClient.requestDevice();
+            device = await bluetooth_le_1.BleClient.requestDevice({
+                allowDuplicates: false,
+                namePrefix: 'B1',
+            });
         }
         await bluetooth_le_1.BleClient.connect(device.deviceId, () => this.onBleDisconnect());
         const { service, characteristic } = await this.findSuitableCharacteristic(device.deviceId).finally(() => this.onBleDisconnect());
