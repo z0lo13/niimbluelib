@@ -47,7 +47,10 @@ export class NiimbotCapacitorBleClient extends NiimbotAbstractClient {
         name: options.deviceId,
       };
     } else {
-      device = await BleClient.requestDevice();
+      device = await BleClient.requestDevice({
+        allowDuplicates: false,
+        namePrefix: 'B1',
+      });
     }
 
     await BleClient.connect(device.deviceId, () => this.onBleDisconnect());
